@@ -369,6 +369,17 @@ function setupEventListeners() {
         }
         return;
       }
+
+      // Fullscreen exit button click interception when already in fullscreen
+      const fsToggleBtn = target.closest(
+        'button[aria-label="Full screen"], [role="button"][aria-label="Full screen"]'
+      );
+      if (fsToggleBtn && document.fullscreenElement) {
+        e.preventDefault();
+        e.stopPropagation();
+        document.exitFullscreen().catch(() => {});
+        return;
+      }
     },
     true
   );
@@ -444,7 +455,85 @@ function initSettings() {
   } catch {}
 }
 
+function setupFullscreenRecovery() {
+  const handleEscape = (e) => {
+    if (e.key === 'Escape' && document.fullscreenElement) {
+      e.preventDefault();
+      e.stopPropagation();
+      document.exitFullscreen().catch(() => {});
+    }
+  };
+
+  window.addEventListener('keydown', handleEscape, true);
+  document.addEventListener('keydown', handleEscape, true);
+
+  let exitBtnTimeout = null;
+
+  function updateFullscreenOverlay() {
+    const fsEl = document.fullscreenElement;
+    const existingBtn = document.getElementById('wa-fullscreen-exit-button');
+
+    if (!fsEl) {
+      if (existingBtn) existingBtn.remove();
+      if (exitBtnTimeout) {
+        clearTimeout(exitBtnTimeout);
+        exitBtnTimeout = null;
+      }
+      return;
+    }
+
+    if (existingBtn && existingBtn.parentElement === fsEl) {
+      return;
+    }
+
+    if (existingBtn) existingBtn.remove();
+
+    const btn = document.createElement('button');
+    btn.id = 'wa-fullscreen-exit-button';
+    btn.className = 'wa-fullscreen-exit-btn';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Exit full screen');
+    btn.setAttribute('title', 'Exit full screen (Esc)');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+      <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-14v3h3v2h-5V5h2z"/>
+    </svg>`;
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      document.exitFullscreen().catch(() => {});
+    });
+
+    const resetIdleTimer = () => {
+      btn.style.opacity = '1';
+      if (exitBtnTimeout) clearTimeout(exitBtnTimeout);
+      exitBtnTimeout = setTimeout(() => {
+        if (document.fullscreenElement) {
+          btn.style.opacity = '0.35';
+        }
+      }, 2500);
+    };
+
+    fsEl.addEventListener('mousemove', resetIdleTimer);
+    resetIdleTimer();
+
+    fsEl.addEventListener('dblclick', (e) => {
+      if (!e.target.closest('button, input, [role="button"], [role="slider"]')) {
+        e.preventDefault();
+        e.stopPropagation();
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    fsEl.appendChild(btn);
+  }
+
+  document.addEventListener('fullscreenchange', updateFullscreenOverlay);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenOverlay);
+}
+
 updatePortraitState();
 lockMainScreenScroll();
 setupEventListeners();
+setupFullscreenRecovery();
 initSettings();
