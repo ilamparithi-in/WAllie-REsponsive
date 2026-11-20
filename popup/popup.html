@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WAllie - REsponsive</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+        <line x1="8" y1="21" x2="16" y2="21"></line>
+        <line x1="12" y1="17" x2="12" y2="21"></line>
+      </svg>
+    </div>
+    <div class="header-text">
+      <div class="title">WAllie - REsponsive</div>
+      <div class="subtitle">Adaptive View & Chat Pane Styling</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Responsive Layout Section -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title-row">
+          <span class="card-title">Responsive Layout (Portrait Mode)</span>
+        </div>
+        <p class="card-desc">
+          Single-pane layout for narrow or portrait displays with smooth sliding transitions.
+        </p>
+      </div>
+
+      <div class="control-container">
+        <div class="segmented-control">
+          <label class="segmented-option">
+            <input type="radio" name="layoutMode" value="auto" id="mode-auto" checked>
+            <span>Auto (Responsive)</span>
+          </label>
+          <label class="segmented-option">
+            <input type="radio" name="layoutMode" value="portrait" id="mode-portrait">
+            <span>Always Portrait</span>
+          </label>
+          <label class="segmented-option">
+            <input type="radio" name="layoutMode" value="disabled" id="mode-disabled">
+            <span>Always Landscape</span>
+          </label>
+        </div>
+        <div class="helper-text" id="mode-desc">
+          Auto collapses to single column when window width &le; 900px.
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Wallpaper Section -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title-row">
+          <span class="card-title">Chat Pane Wallpaper</span>
+        </div>
+        <p class="card-desc">
+          Applied to active conversation (#main).
+        </p>
+      </div>
+
+      <div class="wallpaper-body">
+        <div class="wallpaper-row">
+          <!-- Thumbnail Preview -->
+          <div class="wallpaper-preview" id="wallpaper-preview">
+            <span id="no-wallpaper-label">Default Pattern</span>
+          </div>
+
+          <!-- Actions -->
+          <div class="wallpaper-actions">
+            <div class="button-group">
+              <label class="btn btn-primary file-label">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span>Choose Image...</span>
+                <input type="file" id="wallpaper-file-input" accept="image/jpeg,image/png,image/webp" style="display: none;">
+              </label>
+
+              <button id="clear-wallpaper-btn" class="btn btn-secondary" style="display: none;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f15c6d" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                <span>Clear Wallpaper</span>
+              </button>
+            </div>
+            <p class="wallpaper-note">
+              Supports JPEG, PNG, and WebP. Automatically downscaled to 1920px max JPEG at 82% quality to keep WhatsApp Web fast.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
