@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const modePortrait = document.getElementById('mode-portrait');
   const modeDisabled = document.getElementById('mode-disabled');
   const modeDesc = document.getElementById('mode-desc');
+  const disableAnimations = document.getElementById('toggle-disable-animations');
   const wallpaperPreview = document.getElementById('wallpaper-preview');
   const fileInput = document.getElementById('wallpaper-file-input');
   const clearWallpaperBtn = document.getElementById('clear-wallpaper-btn');
@@ -38,9 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  chrome.storage?.local?.get?.(['layoutMode', 'customWallpaper'], (items) => {
+  chrome.storage?.local?.get?.(['layoutMode', 'disableAnimations', 'customWallpaper'], (items) => {
     if (items) {
       updateLayoutModeUI(items.layoutMode || 'auto');
+      if (disableAnimations) {
+        disableAnimations.checked = !!items.disableAnimations;
+      }
       updateWallpaperUI(items.customWallpaper);
     }
   });
@@ -54,6 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
   modeAuto?.addEventListener('change', handleModeChange);
   modePortrait?.addEventListener('change', handleModeChange);
   modeDisabled?.addEventListener('change', handleModeChange);
+
+  disableAnimations?.addEventListener('change', (e) => {
+    chrome.storage?.local?.set?.({ disableAnimations: e.target.checked });
+  });
 
   fileInput?.addEventListener('change', async (e) => {
     const files = e.target.files;

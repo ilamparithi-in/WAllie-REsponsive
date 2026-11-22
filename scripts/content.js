@@ -427,9 +427,23 @@ function setupEventListeners() {
   });
 }
 
+function applyDisableAnimations(disabled) {
+  if (!document.documentElement) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => applyDisableAnimations(disabled), { once: true });
+    }
+    return;
+  }
+  if (disabled) {
+    document.documentElement.setAttribute('data-wallie-no-animations', 'true');
+  } else {
+    document.documentElement.removeAttribute('data-wallie-no-animations');
+  }
+}
+
 function initSettings() {
   try {
-    chrome.storage?.local?.get?.(['layoutMode', 'customWallpaper'], (items) => {
+    chrome.storage?.local?.get?.(['layoutMode', 'customWallpaper', 'disableAnimations'], (items) => {
       if (items) {
         if (items.layoutMode) {
           currentMode = items.layoutMode;
@@ -437,6 +451,9 @@ function initSettings() {
         }
         if (items.customWallpaper !== undefined) {
           applyCustomWallpaper(items.customWallpaper);
+        }
+        if (items.disableAnimations !== undefined) {
+          applyDisableAnimations(items.disableAnimations);
         }
       }
     });
@@ -449,6 +466,9 @@ function initSettings() {
         }
         if (changes.customWallpaper) {
           applyCustomWallpaper(changes.customWallpaper.newValue || '');
+        }
+        if (changes.disableAnimations !== undefined) {
+          applyDisableAnimations(changes.disableAnimations.newValue || false);
         }
       }
     });

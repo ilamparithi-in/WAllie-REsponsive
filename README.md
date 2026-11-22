@@ -36,6 +36,7 @@ The interface breaks: chat lists overlap conversation views, text inputs get cru
 - 🔙 **Header Back Button**: Injects a WhatsApp-styled back button for effortless list/chat navigation.
 - 🎨 **Custom Chat Wallpaper**: Upload custom backgrounds (JPEG, PNG, WebP) with live preview and automatic downscaling.
 - ⚙️ **Configurable Layout Modes**: Choose between **Auto (Responsive)**, **Always Portrait**, or **Always Landscape** via the extension popup.
+- ⚡ **Instant Transitions**: Option to disable sliding animations for snappy, instant single-pane switching.
 - 🔒 **Zero Permissions Overhead**: Only requests `storage` to persist your layout mode and wallpaper locally.
 
 
